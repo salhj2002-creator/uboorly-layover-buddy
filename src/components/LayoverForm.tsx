@@ -27,6 +27,27 @@ const saudiAirports = [
   { code: 'AHB', name: 'Abha Regional Airport' },
 ];
 
+const nationalities = [
+  'Saudi Arabia',
+  'United Arab Emirates',
+  'United States',
+  'United Kingdom',
+  'India',
+  'Pakistan',
+  'Philippines',
+  'Egypt',
+  'Bangladesh',
+  'Indonesia',
+  'Nigeria',
+  'China',
+  'Turkey',
+  'Germany',
+  'France',
+  'Canada',
+  'Australia',
+  'Other',
+];
+
 const LayoverForm: React.FC<LayoverFormProps> = ({ onSubmit }) => {
   const [formData, setFormData] = useState<LayoverFormData>({
     airport: '',
@@ -136,15 +157,21 @@ const LayoverForm: React.FC<LayoverFormProps> = ({ onSubmit }) => {
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="nationality">Nationality</Label>
-            <Input
-              id="nationality"
-              placeholder="Enter your nationality"
-              value={formData.nationality}
-              onChange={(e) => setFormData({...formData, nationality: e.target.value})}
-            />
-          </div>
+<div className="space-y-2">
+  <Label htmlFor="nationality">Nationality</Label>
+  <Select value={formData.nationality} onValueChange={(value) => setFormData({ ...formData, nationality: value })}>
+    <SelectTrigger>
+      <SelectValue placeholder="Select your nationality" />
+    </SelectTrigger>
+    <SelectContent>
+      {nationalities.map((n) => (
+        <SelectItem key={n} value={n}>
+          {n}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+</div>
 
           <Button 
             type="submit" 
