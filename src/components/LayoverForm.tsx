@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plane, Clock, MapPin, PlaneTakeoff, PlaneLanding } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
 
 interface LayoverFormData {
   airport: string;
@@ -68,6 +69,12 @@ const LayoverForm: React.FC<LayoverFormProps> = ({ onSubmit }) => {
         flightDurationMinutes = isNaN(diff) ? undefined : diff;
       }
       onSubmit({ ...formData, flightDurationMinutes });
+    } else {
+      toast({
+        title: 'Missing details',
+        description: 'Please select airport, layover duration, and nationality.',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -178,7 +185,6 @@ const LayoverForm: React.FC<LayoverFormProps> = ({ onSubmit }) => {
             variant="hero" 
             size="lg" 
             className="w-full mt-6"
-            disabled={!formData.airport || !formData.layoverHours || !formData.nationality}
           >
             Plan My Layover
           </Button>
