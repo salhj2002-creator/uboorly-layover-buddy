@@ -15,6 +15,9 @@ interface LayoverData {
   airport: string;
   layoverHours: string;
   nationality: string;
+  departureTime?: string;
+  arrivalTime?: string;
+  flightDurationMinutes?: number;
 }
 
 const Index = () => {

@@ -4,12 +4,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plane, Clock, MapPin } from 'lucide-react';
+import { Plane, Clock, MapPin, PlaneTakeoff, PlaneLanding } from 'lucide-react';
 
 interface LayoverFormData {
   airport: string;
   layoverHours: string;
   nationality: string;
+  departureTime?: string;
+  arrivalTime?: string;
+  flightDurationMinutes?: number;
 }
 
 interface LayoverFormProps {
@@ -28,13 +31,22 @@ const LayoverForm: React.FC<LayoverFormProps> = ({ onSubmit }) => {
   const [formData, setFormData] = useState<LayoverFormData>({
     airport: '',
     layoverHours: '',
-    nationality: ''
+    nationality: '',
+    departureTime: '',
+    arrivalTime: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.airport && formData.layoverHours && formData.nationality) {
-      onSubmit(formData);
+      let flightDurationMinutes: number | undefined = undefined;
+      if (formData.departureTime && formData.arrivalTime) {
+        const start = new Date(formData.departureTime).getTime();
+        const end = new Date(formData.arrivalTime).getTime();
+        const diff = Math.max(0, Math.floor((end - start) / 60000));
+        flightDurationMinutes = isNaN(diff) ? undefined : diff;
+      }
+      onSubmit({ ...formData, flightDurationMinutes });
     }
   };
 
@@ -83,6 +95,45 @@ const LayoverForm: React.FC<LayoverFormProps> = ({ onSubmit }) => {
                 <SelectItem value="18-24">18-24 hours</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Flight Details */}
+          <div className="space-y-2">
+            <Label htmlFor="departureTime" className="flex items-center gap-2">
+              <PlaneTakeoff className="w-4 h-4" />
+              Departure date & time
+            </Label>
+            <Input
+              id="departureTime"
+              type="datetime-local"
+              value={formData.departureTime}
+              onChange={(e) => setFormData({ ...formData, departureTime: e.target.value })}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="arrivalTime" className="flex items-center gap-2">
+              <PlaneLanding className="w-4 h-4" />
+              Arrival date & time
+            </Label>
+            <Input
+              id="arrivalTime"
+              type="datetime-local"
+              value={formData.arrivalTime}
+              onChange={(e) => setFormData({ ...formData, arrivalTime: e.target.value })}
+            />
+            {formData.departureTime && formData.arrivalTime && (
+              <p className="text-sm text-muted-foreground">
+                Flight duration: {(() => {
+                  const start = new Date(formData.departureTime).getTime();
+                  const end = new Date(formData.arrivalTime).getTime();
+                  const mins = Math.max(0, Math.floor((end - start) / 60000));
+                  const hrs = Math.floor(mins / 60);
+                  const rem = mins % 60;
+                  return isNaN(mins) ? '—' : `${hrs}h ${rem}m`;
+                })()}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
