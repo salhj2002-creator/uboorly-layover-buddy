@@ -8,6 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Clock, MapPin, Car, Bus, Navigation, AlertCircle, CheckCircle, Plane } from 'lucide-react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import JourneyIllustration from './JourneyIllustration';
+import TripTracker from './TripTracker';
 
 interface SelfGuidedTripProps {
   destination: string;
@@ -214,12 +216,12 @@ const SelfGuidedTrip: React.FC<SelfGuidedTripProps> = ({ destination, children }
             </Card>
           )}
 
-          {/* Interactive Map */}
+          {/* Interactive Map or Journey Illustration */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 <MapPin className="w-5 h-5" />
-                Transport Locations
+                {mapboxToken ? 'Transport Locations' : 'Journey Overview'}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -229,62 +231,13 @@ const SelfGuidedTrip: React.FC<SelfGuidedTripProps> = ({ destination, children }
                   className="w-full h-64 rounded-lg border bg-muted"
                 />
               ) : (
-                <div className="w-full h-64 rounded-lg border bg-muted flex items-center justify-center">
-                  <div className="text-center space-y-2">
-                    <MapPin className="w-8 h-8 text-muted-foreground mx-auto" />
-                    <p className="text-sm text-muted-foreground">Interactive map will appear here</p>
-                  </div>
-                </div>
+                <JourneyIllustration destination={destination} />
               )}
             </CardContent>
           </Card>
 
-          {/* Timeline Schedule */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Clock className="w-5 h-5" />
-                Your Trip Timeline
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {timeline.map((item, index) => (
-                  <div key={index} className="flex items-start gap-4">
-                    <div className="flex flex-col items-center">
-                      <div className="w-8 h-8 rounded-full bg-background border-2 border-primary flex items-center justify-center">
-                        {getTimelineIcon(item.type)}
-                      </div>
-                      {index < timeline.length - 1 && (
-                        <div className="w-0.5 h-6 bg-border mt-2" />
-                      )}
-                    </div>
-                    
-                    <div className="flex-1 space-y-1">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-xs font-mono">
-                            {item.time}
-                          </Badge>
-                          <span className="font-medium text-sm">{item.activity}</span>
-                        </div>
-                        {item.duration && (
-                          <span className="text-xs text-muted-foreground">
-                            {item.duration}
-                          </span>
-                        )}
-                      </div>
-                      {item.location && (
-                        <p className="text-xs text-muted-foreground pl-2">
-                          📍 {item.location}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          {/* Trip Tracker */}
+          <TripTracker destination={destination} timeline={timeline} />
 
           {/* Transport Options */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -371,10 +324,6 @@ const SelfGuidedTrip: React.FC<SelfGuidedTripProps> = ({ destination, children }
                 Close
               </Button>
             </DialogClose>
-            <Button className="flex-1">
-              <Plane className="w-4 h-4 mr-2" />
-              Start My Trip
-            </Button>
           </div>
         </div>
       </DialogContent>
