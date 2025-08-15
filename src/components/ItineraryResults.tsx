@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Clock, MapPin, DollarSign, Luggage, Navigation, ArrowLeft, Play, Star, Car, Bus, Train } from 'lucide-react';
+import SelfGuidedTrip from '@/components/SelfGuidedTrip';
 
 interface ItineraryItem {
   id: string;
@@ -249,57 +250,12 @@ const ItineraryResults: React.FC<ItineraryResultsProps> = ({
                   
                   {/* Action Buttons */}
                   <div className="flex gap-2 mt-3">
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size="sm" className="flex-1">
-                          <Car className="w-3 h-3 mr-1" />
-                          Start Your Own
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                          <DialogTitle>Self-Guided Trip to {item.title}</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4 py-4">
-                          <div>
-                            <h4 className="font-semibold mb-2 flex items-center gap-2">
-                              <Car className="w-4 h-4" />
-                              Ride Services
-                            </h4>
-                            <div className="space-y-2 text-sm">
-                              <p><strong>Pickup:</strong> {selfGuidedInfo.uber.location}</p>
-                              <p><strong>Duration:</strong> {selfGuidedInfo.uber.estimatedTime}</p>
-                              <p><strong>Cost:</strong> {selfGuidedInfo.uber.cost}</p>
-                            </div>
-                          </div>
-                          
-                          <div>
-                            <h4 className="font-semibold mb-2 flex items-center gap-2">
-                              <Bus className="w-4 h-4" />
-                              Public Transport
-                            </h4>
-                            <div className="space-y-2 text-sm">
-                              <p><strong>Metro:</strong> {selfGuidedInfo.localTransport.metro}</p>
-                              <p><strong>Bus:</strong> {selfGuidedInfo.localTransport.bus}</p>
-                              <p><strong>Duration:</strong> {selfGuidedInfo.localTransport.estimatedTime}</p>
-                              <p><strong>Cost:</strong> {selfGuidedInfo.localTransport.cost}</p>
-                            </div>
-                          </div>
-                          
-                          <div>
-                            <h4 className="font-semibold mb-2">Tips</h4>
-                            <ul className="space-y-1 text-sm">
-                              {selfGuidedInfo.tips.map((tip, idx) => (
-                                <li key={idx} className="flex items-start gap-2">
-                                  <span className="w-1 h-1 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-                                  {tip}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
+                    <SelfGuidedTrip destination={item.title}>
+                      <Button variant="outline" size="sm" className="flex-1">
+                        <Car className="w-3 h-3 mr-1" />
+                        Start Your Own
+                      </Button>
+                    </SelfGuidedTrip>
                     
                     <Dialog>
                       <DialogTrigger asChild>
